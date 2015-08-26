@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Bookmark Manager</title>
+		<!-- CSS Files -->
+		<link href="static/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="static/css/page-header.css" rel="stylesheet" type="text/css">
+		<link href="static/css/home.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<!-- Javascript Files -->
+		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/profile.js"></script>
+	</head>
+
+	<body>
+			<!-- Profile -->
+			<div id="profile-body">
+				<h2 style="color:indigo;text-align:center"> Your Profile </h2>
+				<br/>
+				<div class="well">
+					<h3 class="sub-heading" style="text-align:center"> General Information</h3>
+					<br/>
+					<div class="row">
+						<div class="col-md-2 col-md-offset-3">
+							<ul class="list-group">
+								<li class="list-group-item profile sub-heading">Name</li>
+								<li class="list-group-item profile sub-heading">Gender</li>
+								<li class="list-group-item profile sub-heading">Country</li>
+								<li class="list-group-item profile sub-heading">About</li>  
+							</ul>
+						</div>
+
+						<div class="col-md-5">
+							<!-- Saved Profile -->
+							<ul class="list-group list-toggle active">
+								<li class="list-group-item profile saved" id="name-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="gender-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="country-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="about-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>  
+							</ul>
+							<!-- Editable Profile -->
+							<ul class="list-group list-toggle">
+								<li class="list-group-item edit" id="name-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+				      			</li>
+								<li class="list-group-item edit" id="gender-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+								</li>
+								<li class="list-group-item edit" id="country-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+								</li>
+								<li class="list-group-item edit" id="about-edit">
+									<div class="input-group">
+							      	<textarea class="form-control"></textarea>
+							      	</div>
+								</li>
+								<li class="list-group-item edit">
+									<p align="center"><a class="btn btn-success btn-lg" id="save-profile">Save</a></p>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<h4 style="color:red;text-align:center" class="info-saved"> Information Saved!</h4>
+				</div>
+			</div>
+	</body>
+</html>
