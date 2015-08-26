@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Bookmark Manager</title>
+		<!-- CSS Files -->
+		<link href="static/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="static/css/page-header.css" rel="stylesheet" type="text/css">
+		<link href="static/css/home.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<!-- Javascript Files -->
+		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/home.js"></script>
+
+	</head>
+	
+	<body>
+		<div class="overlay-back"></div>
+		<div class="header">
+			<div class="overlay-back"></div>
+			<div class="page-header" id="contact-info">
+				<div class="container">
+					<p>
+						<span class="glyphicon glyphicon-triangle-bottom" style="float:right" aria-hidden="true"></span>
+						<span style="float:right" id="useremail"></span>
+						Contact : <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> rohit.jv@oracle.com
+					</p>
+				</div>
+			</div> 
+			<div class="page-header">
+				<div class="container">
+	  				<h1 class="text-left">Bookmark Manager</h1>
+	  			</div>
+	  			<div class="overlay-dropdown">
+	  				<ul class="list-group">
+					  <li class="list-group-item" style="text-align:center" disabled>Profile</li>
+					  <li class="list-group-item" style="text-align:center" id="logoutbutton">Logout</li>
+					</ul>
+	  			</div>
+			</div>
+			<hr class="fancy-line"></hr>
+			<div class="page-header" id="navigation">
+				<div class="container">
+						<ul class="nav nav-tabs nav-justified" id="navigation-list">
+							<li class="active" id="bookmarksbutton"><a class="navbar-link">Bookmarks</a></li>
+							<li id="foldersbutton"><a class="navbar-link">Folders</a></li>
+					        <li id="profilebutton"><a class="navbar-link">Profile</a></li>
+					        <li id="homebutton"><a class="navbar-link">Help & FAQ</a></li>
+					    </ul>
+				</div>
+			</div> 
+		</div>
+		<br/><br/><br/>
+		<br/><br/><br/>
+		<br/><br/><br/>
+		<br/><br/>
+
+		<div class="main-body container">
+
+			<!-- Home -->
+			<div class="inner-body" id="home-body">
+				<div class="row">
+					<div class="col-md-8">
+						<h2 style="color:indigo"> Help & FAQ </h2>
+						<br/>
+						<h4 class="sub-heading">What are you here for?</h4>
+						<p> Click on the <i>Bookmarks</i> tab, and get started with adding Bookmarks. Name the bookmarks with whatever name you find suitable.</p>
+						<br/>
+						<h4 class="sub-heading">Get organized!</h4>
+						<p> Click on the <i>Folders</i> tab to organize your bookmarks into folders. </p>
+						<p> Folders are useful when you have to store a lot of data, and you wish to cluster related data together.</p>
+						<br/>
+						<h4 class="sub-heading">Edit your profile</h4>
+						<p> Click on the <i>Profile</i> tab to edit your profile.
+						<!-- Your Profile is what other people would see when they visit you from the <i>People on Bookmark Manager</i> panel.-->
+						</p>
+						<br/>
+						<h4 class="sub-heading">Find out who else is using Bookmark Manager</h4>
+						<p> Explore the people using bookmark manager under the <i>People on Bookmark Manager</i> panel.</p>
+						<p> Invite your friends and find them too on Bookmark Manager! </p>
+						<br/>	
+					</div>
+					<div class="well col-md-4" id="people-list">
+						<h3> People on Bookmark Manager </h3>
+						<ul id="users-list" class="list-group">
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- Profile -->
+			<div class="inner-body" id="profile-body">
+				<h2 style="color:indigo;text-align:center"> Your Profile </h2>
+				<br/>
+				<div class="well">
+					<h3 class="sub-heading" style="text-align:center"> General Information</h3>
+					<br/>
+					<div class="row">
+						<div class="col-md-2 col-md-offset-3">
+							<ul class="list-group">
+								<li class="list-group-item profile sub-heading">Name</li>
+								<li class="list-group-item profile sub-heading">Gender</li>
+								<li class="list-group-item profile sub-heading">Country</li>
+								<li class="list-group-item profile sub-heading">About</li>  
+							</ul>
+						</div>
+
+						<div class="col-md-5">
+							<!-- Saved Profile -->
+							<ul class="list-group list-toggle active">
+								<li class="list-group-item profile saved" id="name-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="gender-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="country-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>
+								<li class="list-group-item profile saved" id="about-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span><span class="profile-content"></span></li>  
+							</ul>
+							<!-- Editable Profile -->
+							<ul class="list-group list-toggle">
+								<li class="list-group-item edit" id="name-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+				      			</li>
+								<li class="list-group-item edit" id="gender-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+								</li>
+								<li class="list-group-item edit" id="country-edit">
+									<div class="input-group">
+							      	<input type="text" class="form-control"></input>
+							      	</div>
+								</li>
+								<li class="list-group-item edit" id="about-edit">
+									<div class="input-group">
+							      	<textarea class="form-control"></textarea>
+							      	</div>
+								</li>
+								<li class="list-group-item edit">
+									<p align="center"><a class="btn btn-success btn-lg" id="save-profile">Save</a></p>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<h4 style="color:red;text-align:center" class="info-saved"> Information Saved!</h4>
+				</div>
+			</div>
+
+			<!-- All Bookmarks -->
+			<div class="inner-body active" id="bookmarks-body">
+				<br/>
+				<div class="row">
+					<!-- Bookmark List -->
+					<div class="well col-md-6">
+						<h2 style="color:indigo;text-align:center"> Your Bookmarks </h2>
+						<hr/>
+						<div class="list-group" id="bookmarks-list">
+						</div>
+					</div>
+					<!-- Add bookmarks -->
+					<div class="well col-md-5 col-md-offset-1">
+						<h2 style="color:indigo;text-align:center"> New Bookmark </h2>
+						<hr/>
+						<div id="new-bookmark-form">
+							<div class="input-group" id="bm-name">
+								<span class="input-group-addon">Bookmark Name </span>
+								<input type="text" class="form-control" placeholder="Name" id="bookmark-name">
+							</div>
+							<br/>
+							<div class="input-group" id="bm-link">
+								<span class="input-group-addon">Bookmark URL </span>
+								<input type="text" class="form-control" placeholder="Link" id="bookmark-url">
+							</div>
+							<br/>
+							<div class="input-group" id="bm-description">
+								<span class="input-group-addon">Description </span>
+								<input type="text" class="form-control"  placeholder="Description" id="bookmark-desc">
+							</div>
+							<hr/>
+						</div>
+						<p align="center"><a class="btn btn-primary btn-lg" id="add-bookmark">Add bookmark</a></p>
+					</div>
+				</div>
+				<!-- Edit Bookmarks -->
+				<div class="cd-user-modal">
+					<div class="overlay well pop-up">
+					<span style="float:right" class="glyphicon glyphicon-remove close-pop-up"></span>
+					<br/>
+					<h2 style="color:indigo;text-align:center"> Edit bookmark </h2>
+					<br/>
+					<div id="edit-bookmark-form">
+						<div class="input-group" id="edit-bm-name">
+							<span class="input-group-addon">Bookmark Name </span>
+							<input type="text" class="form-control" placeholder="Name" id="bookmark-name" disabled>
+						</div>
+						<br/>
+						<div class="input-group" id="edit-bm-link">
+							<span class="input-group-addon">Bookmark URL </span>
+							<input type="text" class="form-control" placeholder="Link" id="bookmark-url">
+						</div>
+						<br/>
+						<div class="input-group" id="edit-bm-description">
+							<span class="input-group-addon">Description </span>
+							<input type="text" class="form-control"  placeholder="Description" id="bookmark-desc">
+						</div>
+						<hr/>
+						<p align="center"><a class="btn btn-success btn-lg" id="save-bookmark">Save bookmark</a></p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Folders -->
+			<div class="inner-body" id="folders-body">
+				<h2 style="color:indigo;text-align:center"> Your Folders </h2>
+			</div>
+
+			<!-- Logout -->
+			<div class="inner-body" id="logout-body">
+				Logged Out!
+			</div>			
+		</div>
+	</body>
+</html>
