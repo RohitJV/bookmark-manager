@@ -1,0 +1,29 @@
+body {
+	background: url("../images/img5.jpg") no-repeat center center fixed;
+	background-size: cover;
+}
+
+.jumbotron {
+	border-top: 10px;
+}
+
+.opaque-low {
+	opacity: 0.95;
+}
+
+.opaque-medium {
+	opacity: 0.8;
+}
+
+.opaque-high {
+	opacity: 0.2;
+}
+
+.container {
+	z-index:5;
+    overflow:auto;
+}
+
+#getStartedInnerDiv {
+	height : 500px;
+}

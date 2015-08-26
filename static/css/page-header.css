@@ -1,0 +1,52 @@
+.page-header {
+	margin-top: 0px;
+	margin-bottom : 0px;
+	padding-top: 5px;
+	color: indigo;
+	background-color: white;
+	opacity: 0.9;
+	border-bottom-color: white;
+}
+
+#contact-info {
+	background-color: #00ffff;
+	padding-bottom: 0px;
+	color: indigo;
+}
+
+.header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index:9;
+    background:inherit;
+}
+
+.navbar-link {
+	color : indigo;
+}
+
+hr.fancy-line { 
+    border: 0; 
+    height: 0px;
+    position: relative;
+    margin: 0.5em 0; /* Keep other elements away from pseudo elements*/
+}
+hr.fancy-line:before {
+    top: -1.1em;
+    height: 1em;
+}
+hr.fancy-line:before, hr.fancy-line:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+}
+
+hr.fancy-line, hr.fancy-line:before {
+    background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 75%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 75%, color-stop(0%,rgba(0,0,0,0.1)), color-stop(75%,rgba(0,0,0,0)));
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 75%);
+    background: -o-radial-gradient(center, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 75%);
+    background: -ms-radial-gradient(center, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 75%);
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 75%);
+}
