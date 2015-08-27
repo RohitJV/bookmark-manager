@@ -27,6 +27,10 @@ $(document).ready(function() {
 
 //  *********************************************************************************************
 
+	/*
+		Help and FAQ
+	*/
+
 	// Get the list of users, and populate the "People on Bookmark Manager"
 	var usersRef = myFirebaseRef.child("users");
 	var usersList = []; // list of all users
@@ -81,9 +85,24 @@ $(document).ready(function() {
 									    	<p class="list-group-item-text">'+this.link+'</p> \
 									    	<div class="bm-desc"> \
 									    		<hr/> \
-									    		<span style="float:right;padding-left:10px;" class="glyphicon glyphicon-pencil edit-bookmark" aria-hidden="true"></span> \
 									    		<span style="float:right;padding-left:10px;" class="glyphicon glyphicon-trash delete-bookmark" aria-hidden="true"></span> \
+									    		<span style="float:right;padding-left:10px;" class="glyphicon glyphicon-pencil edit-bookmark" aria-hidden="true"></span> \
 									    		<p class="desc">'+this.description+'</p> \
+									    		<div class="dropdown addToFolder" style="text-align:right"> \
+											      <button class="btn btn-default dropdown-toggle" type="button" id="addToFolderButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> \
+											        Add To Folder \
+											        <span class="caret"></span> \
+											      </button> \
+											      <ul class="dropdown-menu dropdown-menu-right" style="width:250px;overflow:auto" aria-labelledby="addToFolderButton"> \
+											      	<div class="input-group"> \
+														<input type="text" class="form-control" placeholder="New Folder"> \
+														<span class="input-group-btn"> \
+													    	<button class="btn btn-success newFolder" type="button">Add</button> \
+													    </span> \
+													</div> \
+													<hr/> \
+											      </ul> \
+											    </div> \
 									    	</div> \
 									  	</div>');
 		}
@@ -119,7 +138,7 @@ $(document).ready(function() {
 	 	var _bookmark_name = snapshot.val().name;
 	 	var _bookmark_url = snapshot.val().link;
 	 	var _bookmark_desc = snapshot.val().description;
-	 	var newBookmark = new bookmark(snapshot.key(), authData.uid, _bookmark_name, _bookmark_url, _bookmark_desc);
+	 	var newBookmark = new bookmark(snapshot.key(), snapshot.val().uid, _bookmark_name, _bookmark_url, _bookmark_desc);
 	 	bookmarksList.push(newBookmark);
 	 	if(snapshot.val().uid === authData.uid) {
 			newBookmark.addToUI();
@@ -191,9 +210,108 @@ $(document).ready(function() {
 		$('.cd-user-modal').removeClass('is-visible');
 	});
 
-
 //  *********************************************************************************************
 
+	/*
+		Folders
+	*/
+
+	var foldersRef = myFirebaseRef.child("folders");
+	var foldersList = []; // list of all folders
+
+	function folder(pushID, uid, name, listBM, imgNum) {
+		this.pushID = pushID;
+		this.uid = uid;
+		this.name = name;
+		this.listBM = listBM;
+		this.arrayBM = listBM.split(',');
+		this.imgNum = imgNum;
+
+		var that = this;
+
+		this.save = function() {
+			var newEntry = foldersRef.push({
+				uid : that.uid,
+				name : that.name,
+				bookmarks : that.listBM,
+				imgNum : that.imgNum
+			});
+		}
+
+		this.addToUI = function() {
+			$('.addToFolder > ul').append('<li><a>' + that.name + '</a></li>');
+			$('.folders').append('<div class="folder col-xs-6 col-md-3" id="'+ that.name +'"> \
+				    <a class="thumbnail"> \
+				      <img src="static/images/img'+ that.imgNum +'.jpg" alt="..."> \
+				      <div class="caption"> \
+				      	<h4 style="text-align:center">'+ that.name +'</h4> \
+				      </div> \
+				    </a> \
+				  </div>');
+		}
+
+		this.update = function(listBM) {
+			var childToEdit = foldersRef.child(that.pushID);
+			childToEdit.update({
+				"bookmarks" : listBM
+			});
+		}
+
+		this.addBookmark = function(bm) {
+			if(that.arrayBM.indexOf(bm) === -1) {
+				that.arrayBM.push(bm);
+				that.listBM = that.listBM + "," + bm;
+				that.update(that.listBM);
+			}
+		}
+	}
+
+	// Search Folder
+	function searchFolder(uid, name) {
+		for (var f in foldersList) {
+			if( (foldersList[f].name === name) && (foldersList[f].uid === uid) )
+				return f;
+		}
+	}
+
+	// Get the list of bookmarks, and populate the "Your Folders" panel
+	foldersRef.on("child_added", function(snapshot) {
+	 	var _folder_name = snapshot.val().name;
+	 	var _folder_listBM = snapshot.val().bookmarks;
+	 	var _folder_imgNum = snapshot.val().imgNum;
+	 	var newFolder = new folder(snapshot.key(), snapshot.val().uid, _folder_name, _folder_listBM, _folder_imgNum);
+	 	foldersList.push(newFolder);
+	 	if(snapshot.val().uid === authData.uid) {
+			newFolder.addToUI();
+		}
+	}, function (errorObject) {
+	  	alert("Failed to retrive bookmarks list");
+	});
+
+	// Add Bookmark to Folder
+	$('#bookmarks-list').on('click','.addToFolder > ul > li > a',function() {
+		// Get index of the folder
+		var f_idx = searchFolder(authData.uid, $(this).html());
+		var $parentElement = $(this).parent().parent().parent().parent().parent();
+		var _bookmark_name = $parentElement.find('h4').find('a').html();
+		var bm_idx = searchBM(authData.uid, _bookmark_name)
+		foldersList[f_idx].addBookmark(bookmarksList[bm_idx].pushID);
+	})
+
+	// Add new folder
+	$('#bookmarks-list').on('click','.newFolder',function() {
+		var _folder_name = $(this).parent().parent().find('input').val();
+		if(  _folder_name === '' )
+			alert("Folder name cannot be empty!");
+		else {
+			// Add to Firebase
+			var _folder_imgNum = Math.floor( (Math.random()*5)+1 );
+			var newFolder = new folder("default", authData.uid, _folder_name, "", _folder_imgNum);
+			newFolder.save();
+		}
+	});
+
+//  *********************************************************************************************
 	// Logout
 	$('#logoutbutton').click(function() {
 		myFirebaseRef.unauth();
