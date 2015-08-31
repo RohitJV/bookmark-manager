@@ -107,6 +107,8 @@ $(document).ready(function() {
 		$('.list-toggle').addClass('active');
 		$(this).parent().parent().parent().removeClass('active');
 	});
+<<<<<<< HEAD
+
 
 	$('#changepwdbutton').click(function() {
 		//alert($('#oldpwd > div > input').val());
@@ -131,4 +133,6 @@ $(document).ready(function() {
 		  }
 		});
 	});
+=======
+>>>>>>> 5c118461ab8be60f58e65d3e64d50c78b35e83e7
 });
