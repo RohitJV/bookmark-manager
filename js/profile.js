@@ -107,4 +107,29 @@ $(document).ready(function() {
 		$('.list-toggle').addClass('active');
 		$(this).parent().parent().parent().removeClass('active');
 	});
+
+
+	$('#changepwdbutton').click(function() {
+		//alert($('#oldpwd > div > input').val());
+		myFirebaseRef.changePassword({
+		  email: usersList[currentUserIndex].email,
+		  oldPassword: $('#oldpwd > div > input').val(),
+		  newPassword: $('#newpwd > div > input').val()
+		}, function(error) {
+		  if (error) {
+		    switch (error.code) {
+		      case "INVALID_PASSWORD":
+		        alert("The specified user account password is incorrect.");
+		        break;
+		      case "INVALID_USER":
+		        alert("The specified user account does not exist.");
+		        break;
+		      default:
+		        alert("Error changing password:", error);
+		    }
+		  } else {
+		    alert("User password changed successfully!");
+		  }
+		});
+	});
 });

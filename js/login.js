@@ -46,7 +46,8 @@ $(document).ready(function() {
 
 		myFirebaseRef.createUser({
 			email    : _email.toString(),
-			password : _password.toString()
+			password : _password.toString(),
+			rememberMe : true
 			}, function(error, userData) {
 				if (error) {
 					alert("Error! Maybe you have already registered");
@@ -85,5 +86,25 @@ $(document).ready(function() {
 		  email    : _email,
 		  password : _password
 		}, authHandler);
+	});
+
+	// Forgot Password
+	$('#forgotpwdbutton').click(function() {
+		alert("A");
+		myFirebaseRef.resetPassword({
+		  email: $('#login-form #email').val().toString()
+		}, function(error) {
+		  if (error) {
+		    switch (error.code) {
+		      case "INVALID_USER":
+		        alert("The specified user account does not exist.");
+		        break;
+		      default:
+		        alert("Error resetting password:", error);
+		    }
+		  } else {
+		    alert("Password reset email sent successfully!");
+		  }
+		});
 	});
 });

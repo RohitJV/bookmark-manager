@@ -79,32 +79,7 @@ $(document).ready(function() {
 		}
 
 		this.addToUI = function() {
-			$('#bookmarks-list').append('<div class="list-group-item"> \
-											<h4 class="list-group-item-heading" style="text-align:left"><a href="'+this.link+'"">'+this.name+'</a> \
-									    		<span style="float:right" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> \</h4> \
-									    	<p class="list-group-item-text">'+this.link+'</p> \
-									    	<div class="bm-desc"> \
-									    		<hr/> \
-									    		<span style="float:right;padding-left:10px;" class="glyphicon glyphicon-trash delete-bookmark" aria-hidden="true"></span> \
-									    		<span style="float:right;padding-left:10px;" class="glyphicon glyphicon-pencil edit-bookmark" aria-hidden="true"></span> \
-									    		<p class="desc">'+this.description+'</p> \
-									    		<div class="dropdown addToFolder" style="text-align:right"> \
-											      <button class="btn btn-default dropdown-toggle" type="button" id="addToFolderButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> \
-											        Add To Folder \
-											        <span class="caret"></span> \
-											      </button> \
-											      <ul class="dropdown-menu dropdown-menu-right" style="width:250px;overflow:auto" aria-labelledby="addToFolderButton"> \
-											      	<div class="input-group"> \
-														<input type="text" class="form-control" placeholder="New Folder"> \
-														<span class="input-group-btn"> \
-													    	<button class="btn btn-success newFolder" type="button">Add</button> \
-													    </span> \
-													</div> \
-													<hr/> \
-											      </ul> \
-											    </div> \
-									    	</div> \
-									  	</div>');
+			$('#bookmarks-list').append(genTemplate(this.name, this.link, this.description));
 		}
 
 		this.getUID = function() {
@@ -149,6 +124,7 @@ $(document).ready(function() {
 
 	//	Expand bookmark description
 	$('#bookmarks-list').on('click','.list-group-item > h4 > .glyphicon-chevron-down',function() {
+		$(this).parent().parent().parent().find('div').find('.bm-desc').hide();
 		$(this).parent().parent().find('.bm-desc').toggle();
 	});
 
@@ -157,8 +133,9 @@ $(document).ready(function() {
 		var _bookmark_name = $('#new-bookmark-form #bm-name input').val();
 		var _bookmark_url = $('#new-bookmark-form #bm-link input').val();
 		var _bookmark_desc = $('#new-bookmark-form #bm-description input').val();
-		var newBookmark = new bookmark("default", authData.uid, _bookmark_name, _bookmark_url, _bookmark_desc);
+		var newBookmark = new bookmark("default", authData.uid, _bookmark_name, _bookmark_url, (_bookmark_desc==""?".":_bookmark_desc));
 		newBookmark.save();
+		location.reload();
 	});
 
 	// Delete bookmark
@@ -224,7 +201,7 @@ $(document).ready(function() {
 		this.uid = uid;
 		this.name = name;
 		this.listBM = listBM;
-		this.arrayBM = listBM.split(',');
+		this.arrayBM = listBM.split(",");
 		this.imgNum = imgNum;
 
 		var that = this;
@@ -240,14 +217,7 @@ $(document).ready(function() {
 
 		this.addToUI = function() {
 			$('.addToFolder > ul').append('<li><a>' + that.name + '</a></li>');
-			$('.folders').append('<div class="folder col-xs-6 col-md-3" id="'+ that.name +'"> \
-				    <a class="thumbnail"> \
-				      <img src="static/images/img'+ that.imgNum +'.jpg" alt="..."> \
-				      <div class="caption"> \
-				      	<h4 style="text-align:center">'+ that.name +'</h4> \
-				      </div> \
-				    </a> \
-				  </div>');
+			$('.folders').append(genFolderTemplate(that.name, that.imgNum));
 		}
 
 		this.update = function(listBM) {
@@ -263,6 +233,50 @@ $(document).ready(function() {
 				that.listBM = that.listBM + "," + bm;
 				that.update(that.listBM);
 			}
+		}
+
+		this.viewBookmarks = function() {
+			var newArrayBM = [];
+			// Check for valid bookmarks (in case few bookmarks were deleted)
+			for(var bm in that.arrayBM) {
+				bookmarksRef.once("value",function(snapshot) {
+					if(snapshot.hasChild(that.arrayBM[bm])) {
+						newArrayBM.push(that.arrayBM[bm]);
+						var $bmObject = bookmarksRef.child(that.arrayBM[bm]);
+						var _bm_name = "default";
+						var _bm_link = "default";
+						var _bm_desc = "default";
+						$bmObject.once("value", function(snapshot) {
+							_bm_name = snapshot.val().name;
+							_bm_link = snapshot.val().link;
+							_bm_desc = snapshot.val().description;
+						});
+						// display the bookmarks
+						$('#folder-bookmarks-list').append(genFolderBookmarkTemplate(_bm_name, _bm_link, _bm_desc));
+					}
+				});
+			}
+			// update Firebase with correct data of bookmarks
+			that.arrayBM = newArrayBM;
+			that.listBM = "";
+			for(bm in that.arrayBM) {
+				that.listBM = that.listBM + "," + that.arrayBM[bm];
+			}
+			that.update(that.listBM);
+		}
+
+		this.removeBM = function(id) {
+			var newArrayBM = [];
+			for(var bm in that.arrayBM) {
+				if(that.arrayBM[bm] !== id)
+					newArrayBM.push(that.arrayBM[bm]);
+			}
+			that.arrayBM = newArrayBM;
+			that.listBM = "";
+			for(var bm in that.arrayBM) {
+				that.listBM = that.listBM + "," + that.arrayBM[bm];
+			}
+			that.update(that.listBM);
 		}
 	}
 
@@ -282,6 +296,7 @@ $(document).ready(function() {
 	 	var newFolder = new folder(snapshot.key(), snapshot.val().uid, _folder_name, _folder_listBM, _folder_imgNum);
 	 	foldersList.push(newFolder);
 	 	if(snapshot.val().uid === authData.uid) {
+	 		$('#nofolders').hide();
 			newFolder.addToUI();
 		}
 	}, function (errorObject) {
@@ -309,6 +324,48 @@ $(document).ready(function() {
 			var newFolder = new folder("default", authData.uid, _folder_name, "", _folder_imgNum);
 			newFolder.save();
 		}
+	});
+
+	// view folder contents
+	$('.folders').on('click','div > a',function() {
+		$('#folders-view, #expanded-folders-view').animate({
+			left: "-=85%",
+		}, 1000, function() {
+			//
+		});
+		var clickElement = $(this);
+		var _folder_name = clickElement.find('div').find('h4').html()
+		$('#expanded-folders-view').addClass("active");
+		$('#expanded-folders-view > h2').html(_folder_name);
+		// Get index of the selected folder
+		var f_idx = searchFolder(authData.uid, _folder_name);
+		foldersList[f_idx].viewBookmarks();
+	});
+
+	// View folders
+	$('#back').click(function() {
+		$('#folders-view, #expanded-folders-view').animate({
+			left: "+=85%",
+		}, 1000, function() {
+			//
+		});
+		$('#folder-bookmarks-list').empty();
+	});
+
+	//	Expand bookmark description
+	$('#folder-bookmarks-list').on('click','.list-group-item > h4 > .glyphicon-chevron-down',function() {
+		$(this).parent().parent().find('.bm-desc').toggle();
+	});
+
+	// remove bookmark from folder
+	$('#folder-bookmarks-list').on('click','div > h4 > .glyphicon-remove',function() {
+		var _bm_name = $(this).parent().find('a').html();
+		var bm_idx = searchBM(authData.uid, _bm_name);
+		var _bm_pushID = bookmarksList[bm_idx].pushID;
+		var _f_name = $(this).parent().parent().parent().parent().find('h2').html();
+		var f_idx = searchFolder(authData.uid, _f_name);
+		foldersList[f_idx].removeBM(_bm_pushID);
+		$(this).parent().parent().remove();
 	});
 
 //  *********************************************************************************************

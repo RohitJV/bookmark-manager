@@ -15,6 +15,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/home.js"></script>
+		<script type="text/javascript" src="js/template.js"></script>
 
 	</head>
 	
@@ -37,8 +38,8 @@
 	  			</div>
 	  			<div class="overlay-dropdown">
 	  				<ul class="list-group">
-					  <li class="list-group-item" style="text-align:center" id="profilebutton">Profile</li>
-					  <li class="list-group-item" style="text-align:center" id="logoutbutton">Logout</li>
+					  <li class="list-group-item" style="text-align:center" id="profilebutton"><a>Profile</a></li>
+					  <li class="list-group-item" style="text-align:center" id="logoutbutton"><a>Logout</a></li>
 					</ul>
 	  			</div>
 			</div>
@@ -46,8 +47,8 @@
 			<div class="page-header" id="navigation">
 				<div class="container">
 						<ul class="nav nav-tabs nav-justified" id="navigation-list">
-							<li class="active" id="bookmarksbutton"><a class="navbar-link">Bookmarks</a></li>
-							<li id="foldersbutton"><a class="navbar-link">Folders</a></li>
+							<li class="active" id="foldersbutton"><a class="navbar-link">Folders</a></li>
+							<li id="bookmarksbutton"><a class="navbar-link">Bookmarks</a></li>
 					        <li id="homebutton"><a class="navbar-link">Help & FAQ</a></li>
 					    </ul>
 				</div>
@@ -77,13 +78,13 @@
 						<p> Click on the <i>Profile</i> tab to edit your profile.
 						<!-- Your Profile is what other people would see when they visit you from the <i>People on Bookmark Manager</i> panel.-->
 						</p>
-						<br/>
+						<!-- <br/>
 						<h4 class="sub-heading">Find out who else is using Bookmark Manager</h4>
 						<p> Explore the people using bookmark manager under the <i>People on Bookmark Manager</i> panel.</p>
 						<p> Invite your friends and find them too on Bookmark Manager! </p>
-						<br/>	
+						<br/>	 -->
 					</div>
-					<div class="well col-md-4" id="people-list">
+					<div class="well col-md-4" id="people-list" hidden>
 						<h3> People on Bookmark Manager </h3>
 						<ul id="users-list" class="list-group">
 						</ul>
@@ -92,13 +93,14 @@
 			</div>
 
 			<!-- All Bookmarks -->
-			<div class="inner-body active" id="bookmarks-body">
+			<div class="inner-body" id="bookmarks-body">
 				<br/>
 				<div class="row">
 					<!-- Bookmark List -->
 					<div class="well col-md-6">
 						<h2 style="color:indigo;text-align:center"> Your Bookmarks </h2>
 						<hr/>
+						<!-- <div class="list-group" id="bookmarks-list" style="display:block;height:380px;overflow:scroll"> -->
 						<div class="list-group" id="bookmarks-list">
 						</div>
 					</div>
@@ -156,13 +158,25 @@
 			</div>
 
 			<!-- Folders -->
-			<div class="inner-body" id="folders-body">
+			<div class="inner-body active" id="folders-body">
 				<br/>
-				<h2 style="color:indigo;text-align:center"> Your Folders </h2>
-				<hr/>
-				<br/>
-				<div class="row folders">
-				  
+				<div class="outer" style="width:200%">
+					<div id="folders-view">
+						<h2 style="color:indigo;text-align:center"> Your Folders </h2>
+						<hr/>
+						<br/>
+						<p style="text-align:center" id="nofolders"> There are no folders to show. Go ahead and add your bookmarks to folders by clicking on the <i>Bookmarks</i> tab. </p>
+						<div class="row folders">
+						
+						</div>
+					</div>
+					<div id="expanded-folders-view"  class="well">
+						<a class="btn btn-default btn-lg" id="back"> <span class="glyphicon glyphicon-chevron-left"></span> &nbsp;Back to Folders</a>
+						<h2 style="color:indigo;text-align:center">  </h2>
+						<hr/>
+						<div class="list-group" id="folder-bookmarks-list">
+						</div>
+					</div>
 				</div>
 			</div>
 

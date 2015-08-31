@@ -89,7 +89,7 @@ html, body {
     left       : 0;
     width      : 100%;
     height     : 100%;
-    background : #000;
+    background : #011;
     opacity    : 0.6;
     filter     : alpha(opacity=60);
     z-index    : 5;
@@ -116,4 +116,29 @@ html, body {
     z-index  : 10;
     display  : none;
     background-color: white;
+}
+
+#folders-view {
+    position: absolute;
+    left: 15%;
+    width: 70%;
+}
+
+#expanded-folders-view {
+    position : absolute;
+    left : 100%;
+}
+
+#expanded-folders-view.active{
+    position : absolute;
+    left : 130%;
+    width : 70%;
+}
+
+.red, .red a {
+    color: red;
+}
+
+.blue, .blue a {
+    color: blue;
 }
